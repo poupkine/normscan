@@ -1,0 +1,34 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: 'sans-serif';
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+main {
+  flex-grow: 1;
+  padding-top: 0px;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  height: auto;
+  object-fit: cover;
+}
+
+button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+}
