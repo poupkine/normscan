@@ -1,0 +1,14 @@
+.home-page {
+  padding: var(--page-padding);
+}
+
+.home-page__title {
+  margin: 0 0 30px 0;
+  text-align: center;
+}
+
+.home-page__content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}

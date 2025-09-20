@@ -23,5 +23,9 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
+  /* Import alias */
+  "paths": {
+      "@assets/*": ["./src/assets/*"],
+  },
   "include": ["src"]
 }

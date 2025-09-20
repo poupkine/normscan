@@ -1,0 +1,25 @@
+.header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-header);
+  box-shadow: 0px 3px 4px var(--color-background-darker);
+}
+
+.header__wrapper {
+  height: var(--header-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header__logo-link {
+  display: flex;
+}
+
+.header__logo-image {
+  width: 319px;
+  height: 42px;
+  color: var(--color-primary);
+}
