@@ -36,6 +36,7 @@ export const Home: FC = () => {
         ИИ-сервис для выявления компьютерных томографий органов грудной клетки с «нормой»
       </h1>
       <div className={styles['home-page__content-grid']}>
+        {JSON.stringify(data)}
       </div>
     </div>
   );
