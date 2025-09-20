@@ -23,47 +23,56 @@ OUTPUT_PATH = "data/output/report.xlsx"
 
 def process_single_dicom_file(ds: pydicom.Dataset, detector: PathologyDetector, zip_path: str) -> dict:
     start_time = time.time()
+    # Инициализируем результат с дефолтными значениями
+    result = {
+        'path_to_study': '',
+        'study_uid': '',
+        'series_uid': '',
+        'probability_of_pathology': 0.0,
+        'pathology': 0,
+        'processing_status': 'Failure',
+        'time_of_processing': 0.0,
+        'most_dangerous_pathology_type': None,
+        'pathology_localization': None
+    }
     try:
-        logger.debug(f"--- Начало обработки файла ---")
         # --- Извлечение данных из DICOM ---
         if not hasattr(ds, 'pixel_array') or ds.pixel_array is None:
             raise ValueError("Нет пиксельных данных в DICOM файле")
 
         original_pixel_array = ds.pixel_array
-        logger.debug(f"📸 Оригинальная форма pixel_array: {original_pixel_array.shape}")
+        # logger.debug(f"📸 Оригинальная форма pixel_array: {original_pixel_array.shape}")
 
         # Обработка случая, если pixel_array 3D (многосрезовый DICOM)
         if original_pixel_array.ndim == 3:
-            logger.debug("🔄 Обнаружен 3D массив, выбирается первый срез [0]")
+            # logger.debug("🔄 Обнаружен 3D массив, выбирается первый срез [0]")
             pixel_array_2d = original_pixel_array[0]
         elif original_pixel_array.ndim == 2:
             pixel_array_2d = original_pixel_array
         else:
             raise ValueError(f"Неподдерживаемая размерность pixel_array: {original_pixel_array.ndim}")
 
-        logger.debug(f"📏 Форма 2D массива после обработки: {pixel_array_2d.shape}")
-        # Логируем статистику оригинального изображения для отладки
-        logger.debug(f"📊 Pixel stats (orig): min={pixel_array_2d.min()}, max={pixel_array_2d.max()}, mean={pixel_array_2d.mean():.2f}")
+        # logger.debug(f"📏 Форма 2D массива после обработки: {pixel_array_2d.shape}")
         pixel_array_float = pixel_array_2d.astype(np.float32)
 
         # --- Преобразование в HU ---
         slope = float(getattr(ds, 'RescaleSlope', 1.0))
         intercept = float(getattr(ds, 'RescaleIntercept', 0.0))
-        logger.debug(f"📐 RescaleSlope: {slope}, RescaleIntercept: {intercept}")
+        # logger.debug(f"📐 RescaleSlope: {slope}, RescaleIntercept: {intercept}")
         hu_image = pixel_array_float * slope + intercept
 
         # --- Ограничение диапазона HU ---
         hu_image_clipped = np.clip(hu_image, -1000, 400)
-        logger.debug(f"📉 HU stats (clipped): min={hu_image_clipped.min()}, max={hu_image_clipped.max()}")
+        # logger.debug(f"📉 Min HU: {hu_image_clipped.min()}, Max HU: {hu_image_clipped.max()}")
 
         # --- Нормализация в [0, 1] ---
         min_val, max_val = hu_image_clipped.min(), hu_image_clipped.max()
         if max_val == min_val:
-            logger.warning("⚠️ Все значения пикселей одинаковы. Создается нулевой массив.")
+            # logger.warning("⚠️ Все значения пикселей одинаковы. Создается нулевой массив.")
             hu_image_norm = np.zeros_like(hu_image_clipped)
         else:
             hu_image_norm = (hu_image_clipped - min_val) / (max_val - min_val)
-        logger.debug(f"📈 Нормализованные stats: min={hu_image_norm.min():.4f}, max={hu_image_norm.max():.4f}, mean={hu_image_norm.mean():.4f}")
+        # logger.debug(f"📈 Min нормализованного: {hu_image_norm.min():.4f}, Max: {hu_image_norm.max():.4f}")
 
         # --- Ресемплинг до 128x128 ---
         from scipy.ndimage import zoom
@@ -71,58 +80,79 @@ def process_single_dicom_file(ds: pydicom.Dataset, detector: PathologyDetector, 
         if h == 0 or w == 0:
             raise ValueError("Размеры изображения некорректны (0)")
         zoom_factors = (128 / h, 128 / w)
-        logger.debug(f"🔎 Исходный размер: ({h}, {w}), Zoom factors: {zoom_factors}")
+        # logger.debug(f"🔎 Исходный размер: ({h}, {w}), Zoom factors: {zoom_factors}")
         slice_resized = zoom(hu_image_norm, zoom_factors, order=1, prefilter=False)
-        logger.debug(f"🔎 Размер после ресемплинга: {slice_resized.shape}")
-        logger.debug(f"🔎 Ресемплированные stats: min={slice_resized.min():.4f}, max={slice_resized.max():.4f}, mean={slice_resized.mean():.4f}")
+        # logger.debug(f"🔎 Размер после ресемплинга: {slice_resized.shape}")
 
         # --- Формируем 4D массив для модели ---
         volume = slice_resized[np.newaxis, np.newaxis, :, :]  # (1, 1, 128, 128)
-        logger.debug(f"📦 Форма итогового volume для модели: {volume.shape}")
+        # logger.debug(f"📦 Форма итогового volume для модели: {volume.shape}")
 
         # --- Инференс ---
         prob = detector.predict(volume)
-        # Округляем вероятность до 4 знаков после запятой
         prob_rounded = round(prob, 4)
-        logger.debug(f"🧮 Предсказанная вероятность патологии (округлена): {prob_rounded:.4f}")
+        # logger.debug(f"🧮 Предсказанная вероятность патологии (округлена): {prob_rounded:.4f}")
 
         # --- Извлечение метаданных ---
+        # КРИТИЧНО: используем функции из utils, которые работают с ds.filename
         uid_info = extract_study_series_uids(ds)
         path_to_study = extract_file_path_from_dataset(ds, zip_path)
-        logger.debug(f"📁 Path: {path_to_study}")
-        logger.debug(f"🆔 Study UID: {uid_info.get('study_uid', '')}")
-        logger.debug(f"🔢 Series UID: {uid_info.get('series_uid', '')}")
-        logger.debug(f"--- Конец обработки файла ---")
+        # logger.debug(f"📁 Path: {path_to_study}")
+        # logger.debug(f"🆔 Study UID: {uid_info.get('study_uid', '')}")
+        # logger.debug(f"🔢 Series UID: {uid_info.get('series_uid', '')}")
+        # logger.debug(f"--- Конец обработки файла ---")
 
         processing_time = round(time.time() - start_time, 2)
-        return {
+
+        # Заполняем результат вычисленными значениями
+        result.update({
             'path_to_study': path_to_study,
             'study_uid': uid_info.get('study_uid', ''),
             'series_uid': uid_info.get('series_uid', ''),
-            'probability_of_pathology': prob_rounded,  # Используем округленное значение
+            'probability_of_pathology': prob_rounded,
             'pathology': int(prob_rounded > 0.5),
             'processing_status': 'Success',
             'time_of_processing': processing_time,
-            'most_dangerous_pathology_type': None,
-            'pathology_localization': None
-        }
+        })
+
+        # --- Лог краткой сводки ---
+        log_msg = (
+            f"Файл: {os.path.basename(path_to_study)} | "
+            f"Study_UID: ...{result['study_uid'][-10:] if result['study_uid'] else 'N/A'} | "
+            f"Series_UID: ...{result['series_uid'][-10:] if result['series_uid'] else 'N/A'} | "
+            f"Prob: {result['probability_of_pathology']:.4f} | "
+            f"Патология: {result['pathology']} | "
+            f"Статус: {result['processing_status']} | "
+            f"Время: {result['time_of_processing']:.2f}с"
+        )
+        logger.info(log_msg)
 
     except Exception as e:
         processing_time = round(time.time() - start_time, 2)
+        # Безопасное получение пути для ошибки
         error_file_name = getattr(ds, 'filename', 'unknown.dcm') if 'ds' in locals() else 'unknown.dcm'
         error_path = f"{zip_path}/{error_file_name}"
-        logger.error(f"💀 Ошибка при обработке DICOM-файла {error_path}: {str(e)}")
-        return {
+        # logger.error(f"💀 Ошибка при обработке DICOM-файла {error_path}: {str(e)}")
+
+        result.update({
             'path_to_study': error_path,
-            'study_uid': '',
-            'series_uid': '',
-            'probability_of_pathology': 0.0,
-            'pathology': 0,
             'processing_status': 'Failure',
             'time_of_processing': processing_time,
-            'most_dangerous_pathology_type': None,
-            'pathology_localization': None
-        }
+        })
+
+        # --- Лог краткой сводки об ошибке ---
+        log_msg = (
+            f"Файл: {os.path.basename(error_path)} | "
+            f"Study_UID: N/A | "
+            f"Series_UID: N/A | "
+            f"Prob: N/A | "
+            f"Патология: N/A | "
+            f"Статус: {result['processing_status']} | "
+            f"Время: {result['time_of_processing']:.2f}с"
+        )
+        logger.error(log_msg + f" | Ошибка: {str(e)[:50]}...")
+
+    return result
 
 
 def main(input_dir: str, output_path: str, model_path: str):
@@ -151,11 +181,11 @@ def main(input_dir: str, output_path: str, model_path: str):
             logger.info(f"📄 В ZIP-файле {zip_file.name} найдено {len(dicom_list)} DICOM-файлов.")
 
             for i, ds in enumerate(dicom_list):
-                # Для ускорения отладки можно ограничить количество обрабатываемых файлов
-                # if i >= 10: break
-                logger.info(f"  🔧 Обработка файла {i + 1}/{len(dicom_list)}")
+                # logger.info(f"  🔧 Обработка файла {i+1}/{len(dicom_list)}")
                 result = process_single_dicom_file(ds, detector, str(zip_file))
                 results.append(result)
+                # Для отладки можно ограничить количество обрабатываемых файлов
+                # if i >= 5: break
 
         except Exception as e:
             logger.error(f"🧨 Критическая ошибка при обработке ZIP-файла {zip_file}: {e}")

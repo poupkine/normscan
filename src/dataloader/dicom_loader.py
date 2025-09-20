@@ -52,7 +52,7 @@ def load_dicom_from_zip(zip_path: str) -> List[pydicom.Dataset]:
                             try:
                                 ds = pydicom.dcmread(io.BytesIO(file_bytes), force=True)
                                 # Устанавливаем имя файла в атрибут filename
-                                # Это КРИТИЧНО для последующей обработки
+                                # Это КРИТИЧНО для последующей обработки и логирования
                                 ds.filename = file_name
                                 datasets.append(ds)
                                 processed_count += 1

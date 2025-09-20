@@ -12,3 +12,4 @@ src/model/__pycache__/autoencoder_2d.cpython-313.pyc
 src/dataloader/__pycache__/preprocessing.cpython-313.pyc
 data/train_normal/norma_anon.zip
 src/model/trainer_old.py
+src/model/trainer - worked.py
