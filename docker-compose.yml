@@ -1,13 +1,20 @@
 version: '3.8'
+
 services:
-  ct-detector:
-    build: .
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
     volumes:
-      - ./data/input_zips:/app/data/input_zips
-      - ./data/output:/app/data/output
-      - ./models:/app/models
-    stdin_open: true
-    tty: true
+      - ./backend/data:/app/data
     environment:
       - CUDA_VISIBLE_DEVICES=0
-    command: python main.py
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

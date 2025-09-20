@@ -13,3 +13,16 @@ src/dataloader/__pycache__/preprocessing.cpython-313.pyc
 data/train_normal/norma_anon.zip
 src/model/trainer_old.py
 src/model/trainer - worked.py
+backend/data/input_zips/pneumotorax_anon.zip
+backend/data/input_zips/norma_anon.zip
+backend/data/input_zips/pneumonia_anon.zip
+backend/data/test_dataset/normal/norma_anon.zip
+backend/data/test_dataset/pathology/pneumonia_anon.zip
+backend/data/test_dataset/pathology/pneumotorax_anon.zip
+backend/dataloader/__pycache__/dicom_loader.cpython-313.pyc
+backend/dataloader/__pycache__/nifti_loader.cpython-313.pyc
+backend/dataloader/__pycache__/preprocessing.cpython-313.pyc
+data/output/report.xlsx
+scripts/__pycache__/fine_tune.cpython-313.pyc
+scripts/__pycache__/train_autoencoder.cpython-313.pyc
+scripts/data/test_dataset/normal/synthetic/synthetic_0003.zip
