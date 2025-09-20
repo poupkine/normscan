@@ -1,14 +1,18 @@
 import { type FC, useEffect } from 'react';
+import { useAppDispatch } from '@store/hooks';
+import { setErrorMessage } from '@store/slices/errorSlice';
 import { useApi } from '@hooks/useApi';
 import { getReportList } from '@api/reports';
+import { Loader } from '@ui/Loader';
 import styles from './Home.module.css';
 
 export const Home: FC = () => {
+  const dispatch = useAppDispatch();
   const {
     status,
     data,
     error,
-    // isFetching,
+    isFetching,
     sendRequest
   } = useApi(getReportList);
 
@@ -20,13 +24,14 @@ export const Home: FC = () => {
     if (status === 'success' && data) {
       console.log(data);
     } else if (status === 'error' && error) {
-      console.log(error);
+      dispatch(setErrorMessage(error.getErrorMessage()));
     }
 
   }, [status, data, error]);
 
   return (
     <div className={styles['home-page']}>
+      {isFetching && <Loader />}
       <h1 className={styles['home-page__title']}>
         ИИ-сервис для выявления компьютерных томографий органов грудной клетки с «нормой»
       </h1>

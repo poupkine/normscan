@@ -1,0 +1,45 @@
+.btn {
+  min-height: 32px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--color-white);
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn:active {
+  opacity: 0.8;
+}
+
+/* .btn--primary {
+  background-color: $color-seagull-500;
+
+  &:hover {
+    background-color: $color-seagull-400;
+  }
+
+  &:focus-visible {
+    box-shadow: 0px 0px 5px 2px $color-seagull-300;
+  }
+
+  &:active {
+    background-color: $color-seagull-300;
+  }
+
+  &:disabled {
+    background-color: $color-grey-200;
+    cursor: default;
+  }
+} */
+
+.btn--error:not(:disabled) {
+  background-color: var(--color-error);
+}
+
+/* &:focus-visible {
+  box-shadow: 0px 0px 5px 2px $color-mandy-100;
+} */

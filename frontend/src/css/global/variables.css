@@ -11,6 +11,9 @@
   --color-error: #CC4851;
   --color-content-darker: #4D4142;
   --color-background-darker: #E5E1E1;
+  --color-background-lighter: #FCFAFA;
+  --color-white: #FFFFFF;
+  --color-black-025: rgba(0, 0, 0, 0.25);
 
   /* Fonts */
   --font-family: 'Montserrat', Arial, Helvetica, sans-serif;

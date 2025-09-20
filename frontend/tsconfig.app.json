@@ -29,7 +29,9 @@
       "@assets/*": ["src/assets/*"],
       "@api/*": ["src/api/*"],
       "@services/*": ["src/services/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@store/*": ["src/store/*"],
+      "@ui/*": ["src/ui/*"]
     }
   },
 
