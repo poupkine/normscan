@@ -1,0 +1,41 @@
+.info-card {
+  min-width: 600px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  padding: 60px 80px;
+}
+
+.info-card__title {
+  margin: 0;
+  padding: 0;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 34px;
+  text-align: center;
+}
+
+.info-card__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.info-card__item {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.info-card__item-icon {
+  width: 100px;
+  height: 100px;
+  color: var(--color-secondary);
+}
+
+.info-card__item-title {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+}

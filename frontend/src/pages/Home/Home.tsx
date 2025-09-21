@@ -4,6 +4,9 @@ import { setErrorMessage } from '@store/slices/errorSlice';
 import { useApi } from '@hooks/useApi';
 import { getReportList } from '@api/reports';
 import { Loader } from '@ui/Loader';
+import { InfoCard } from './components/InfoCard';
+import { ActionCard } from './components/ActionCard';
+import { ResultTable } from './components/ResultTable';
 import styles from './Home.module.css';
 
 export const Home: FC = () => {
@@ -33,11 +36,14 @@ export const Home: FC = () => {
     <div className={styles['home-page']}>
       {isFetching && <Loader />}
       <h1 className={styles['home-page__title']}>
-        ИИ-сервис для выявления компьютерных томографий органов грудной клетки с «нормой»
+        NORMSCAN — ИИ-сервис для выявления КТ ОГК с «нормой»
       </h1>
       <div className={styles['home-page__content-grid']}>
-        {JSON.stringify(data)}
+        <InfoCard />
+        <ActionCard />
       </div>
+      <h2 className={styles['home-page__subtitle']}>Результаты</h2>
+      <ResultTable />
     </div>
   );
 };

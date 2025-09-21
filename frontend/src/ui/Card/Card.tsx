@@ -1,8 +1,19 @@
-import { type FC } from 'react';
+import type { FC, HTMLAttributes, ReactNode } from 'react';
 import styles from './Card.module.css';
 
-export const Card: FC = () => {
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  className?: string;
+  children?: ReactNode;
+};
+
+export const Card: FC<Props> = ({ className, children }) => {
   return (
-    <div className={styles['card']}>Card</div>
+    <div className={
+      className
+        ? `${styles['card']} ${className}`
+        : styles['card']
+    }>
+      {children}
+    </div >
   );
 };
