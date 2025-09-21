@@ -4,11 +4,11 @@ import axios from 'axios';
 // В Docker-сети имя сервиса 'backend'
 const API_BASE_URL = process.env.NODE_ENV === 'development'
     ? 'http://localhost:8000'
-    : 'http://backend:8000';
+    : 'https://normscan.ru';;
 
 export const api = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 30000,
+    timeout: 600000,
 });
 
 // Обработчик ошибок

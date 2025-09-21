@@ -37728,3 +37728,4 @@ backend/app/dataloader/__init__.py
 backend/app/dataloader/dicom_loader.py
 backend/app/dataloader/preprocessing.py
 frontend/src/components/ReportDownloader.jsx
+project_structure_analysis.txt
