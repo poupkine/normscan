@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
-class PredictionResult(BaseModel):
+class PredictionResult(BaseModel):  # ✅ ДОЛЖЕН БЫТЬ
     path_to_study: str
     study_uid: str
     series_uid: str
@@ -15,6 +15,6 @@ class PredictionResult(BaseModel):
     pathology_localization: Optional[str] = None
 
 
-class BatchPredictionResult(BaseModel):
+class BatchPredictionResult(BaseModel):  # ✅ ДОЛЖЕН БЫТЬ
     results: List[PredictionResult]
     excel_file_path: str

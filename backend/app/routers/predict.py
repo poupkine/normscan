@@ -2,7 +2,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse, FileResponse
 from app.services.ml_service import MLService
-from app.schemas.schemas import BatchPredictionResult
+from app.schemas.schemas import PredictionResult, BatchPredictionResult  # ✅ ИСПРАВЛЕНО: ДОБАВИЛИ PredictionResult
 from app.utils.excel_reporter import generate_excel_report
 import os
 import tempfile
@@ -16,7 +16,7 @@ MODEL_PATH = "app/static/model_weights/autoencoder_2d.pth"
 ml_service = MLService(MODEL_PATH)
 
 
-@router.post("/predict", response_model=PredictionResult)
+@router.post("/predict", response_model=PredictionResult)  # ✅ ТЕПЕРЬ РАБОТАЕТ
 async def predict_single(file: UploadFile = File(...)):
     try:
         # Сохраняем во временный файл

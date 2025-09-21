@@ -1,50 +1,67 @@
 // frontend/src/components/UploadForm.jsx
 import React, { useState } from 'react';
-import api from '../services/api';
+import { batchPredict, downloadReport } from '../services/api'; // ✅ Импортируем downloadReport
 import ResultsTable from './ResultsTable';
 
 const UploadForm = () => {
-  const [files, setFiles] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [results, setResults] = useState([]);
+    const [files, setFiles] = useState([]);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [results, setResults] = useState([]);
+    const [error, setError] = useState(null);
 
-  const handleFileChange = (e) => {
-    setFiles(Array.from(e.target.files));
-  };
+    const handleFileChange = (e) => {
+        setFiles(Array.from(e.target.files));
+        setError(null);
+    };
 
-  const handleSubmit = async () => {
-    if (!files.length) return;
+    const handleSubmit = async () => {
+        if (!files.length) return;
+        setIsProcessing(true);
+        setError(null);
 
-    setIsProcessing(true);
-    const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
+        try {
+            // ✅ Только получаем результаты — НЕ скачиваем файл
+            const response = await batchPredict(files);
+            
+            if (!response || !response.results) {
+                throw new Error("Invalid response from server");
+            }
 
-    try {
-      const response = await axios.post('/batch_predict', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      setResults(response.data.results);
-      alert('Обработка завершена! Отчёт сгенерирован.');
-    } catch (error) {
-      alert('Ошибка: ' + error.response?.data?.detail || error.message);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+            setResults(response.results); // ✅ Заполняем таблицу
+            alert('✅ Обработка завершена! Результаты отображены ниже.');
 
-  return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1>📌 NORMSCAN — ИИ-сервис для выявления КТ ОГК с «нормой»</h1>
-      <p>Загрузите ZIP-архивы с DICOM-файлами для анализа.</p>
+        } catch (err) {
+            setError(err.message);
+            alert(`❌ Ошибка: ${err.message}`);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
-      <input type="file" multiple accept=".zip" onChange={handleFileChange} />
-      <button onClick={handleSubmit} disabled={isProcessing || !files.length} style={{ marginLeft: '10px', padding: '10px 20px' }}>
-        {isProcessing ? 'Обработка...' : 'Загрузить и проанализировать'}
-      </button>
-
-      <ResultsTable results={results} />
-    </div>
-  );
+    return (
+        <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+            <h1>📌 NORMSCAN — ИИ-сервис для выявления КТ ОГК с «нормой»</h1>
+            {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
+            <p>Загрузите ZIP-архивы с DICOM-файлами для анализа.</p>
+            <input type="file" multiple accept=".zip" onChange={handleFileChange} />
+            <button 
+                onClick={handleSubmit} 
+                disabled={isProcessing || !files.length}
+                style={{ 
+                    marginLeft: '10px', 
+                    padding: '10px 20px', 
+                    backgroundColor: '#007BFF', 
+                    color: 'white', 
+                    border: 'none', 
+                    borderRadius: '4px', 
+                    cursor: 'pointer' 
+                }}
+            >
+                {isProcessing ? 'Обработка...' : 'Загрузить и проанализировать'}
+            </button>
+            <ResultsTable results={results} /> {/* ✅ Таблица + кнопка скачивания внутри */}
+        </div>
+    );
 };
 
 export default UploadForm;
