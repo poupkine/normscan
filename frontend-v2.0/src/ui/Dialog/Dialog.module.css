@@ -1,0 +1,96 @@
+.dialog {
+  padding: 50px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-index-dialog);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-black-025);
+}
+
+.dialog__box {
+  position: relative;
+  width: 400px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  align-items: center;
+  background-color: var(--color-background-lighter);
+  border-radius: 16px;
+}
+
+.dialog__btn-close {
+  padding: 4px;
+  display: flex;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 50%;
+  background-color: transparent;
+  /* color: $color-prussian-blue-500; */
+}
+
+.dialog__btn-close-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--color-secondary);
+}
+
+.dialog__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 27px;
+  text-align: center;
+}
+
+.dialog__subtitle {
+  font-weight: 500;
+}
+
+.dialog__caption {
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.dialog__text {
+  text-align: center;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.dialog__form,
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.dialog__btn {
+  margin: 16px 0 0 0;
+  padding: 8px 18px;
+  background-color: var(--color-secondary);
+  color: var(--color-background-lighter);
+}
+
+.dialog__btn--error:not(:disabled) {
+  background-color: var(--color-error);
+  color: var(--color-background-lighter);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.dialog__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+}

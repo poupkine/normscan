@@ -38,12 +38,12 @@ services:
 
   frontend:
     build:
-      context: ../../frontend
+      context: ../../frontend-v2.0
       target: dev
-    image: frontend:dev
-    container_name: frontend_dev
+    image: frontend-v2.0:dev
+    container_name: frontend_dev_v2.0
     volumes:
-      - ../../frontend:/app
+      - ../../frontend-v2.0:/app
     ports:
       - 5173:5173
     depends_on:
