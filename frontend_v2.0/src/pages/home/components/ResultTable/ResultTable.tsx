@@ -30,9 +30,7 @@ export const ResultTable: FC = () => {
         {resultList.map((result, idx) => (
           <TableRow key={idx}>
             <TableData>
-              ???
-
-              {/* {result.file_name || result.filename || 'N/A'} */}
+              {result.filename || 'N/A'}
             </TableData>
             <TableData>
               {result.study_uid || 'N/A'}

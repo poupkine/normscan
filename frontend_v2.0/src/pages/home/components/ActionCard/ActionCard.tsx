@@ -13,6 +13,11 @@ import { Dialog, DialogForm, DialogButton } from '@ui/Dialog';
 import spriteUrl from '@assets/sprite.svg';
 import styles from './ActionCard.module.css';
 
+const MESSAGES = {
+  FILE_SUCCESS: 'Файл обработан, можете посмотреть результат в таблице.',
+  FILE_LIST_SUCCESS: 'Файлы обработаны, можете посмотреть результаты в таблице и скачать отчет по ссылке.'
+};
+
 
 const FormSchema = z.object({ file: ZipFileFormSchema });
 type FormSchema = z.infer<typeof FormSchema>;
@@ -20,6 +25,7 @@ type FormSchema = z.infer<typeof FormSchema>;
 export const ActionCard: FC = () => {
   const dispatch = useAppDispatch();
   const [isLoadFormOpen, setIsLoadFormOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string>();
   const {
     status: fileStatus,
     data: fileData,
@@ -46,15 +52,17 @@ export const ActionCard: FC = () => {
 
   useEffect(() => {
     if (fileStatus === 'success' && fileData) {
-      console.log(fileData);
       dispatch(setResultList([fileData]));
+      reset();
+      setSuccessMessage(MESSAGES.FILE_SUCCESS);
     } else if (fileStatus === 'error' && fileError) {
       dispatch(setErrorMessage(fileError.getErrorMessage()))
     }
 
     if (fileListStatus === 'success' && fileListData) {
-      console.log(fileListData);
       dispatch(setResultList(fileListData.results));
+      reset();
+      setSuccessMessage(MESSAGES.FILE_LIST_SUCCESS);
     } else if (fileListStatus === 'error' && fileListError) {
       dispatch(setErrorMessage(fileListError.getErrorMessage()))
     }
@@ -85,6 +93,7 @@ export const ActionCard: FC = () => {
   const resetAndClose = () => {
     reset();
     setIsLoadFormOpen(false);
+    setSuccessMessage(undefined);
   };
 
   return (
@@ -101,10 +110,10 @@ export const ActionCard: FC = () => {
       </button>
       <div className={styles['action-card__info']}>
         <span className={styles['action-card__info-text']}>
-          Поддерживаются форматы DICOM, ZIP
+          Поддерживается формат DICOM в ZIP архиве
         </span>
         <span className={styles['action-card__info-text']}>
-          Максимальный размер файла 1ГБ
+          Максимальный размер файла 5МБ
         </span>
         <span className={styles['action-card__info-text']}>
           Исследование будет автоматизировано
@@ -120,8 +129,14 @@ export const ActionCard: FC = () => {
           onSubmit={onSubmit}
         >
           <input type="file" multiple accept=".zip" {...register('file')} />
-          {errors.file && <p className="error">{errors.file.message}</p>}
-          <DialogButton type="submit">Загрузить</DialogButton>
+          {errors.file && <p className={styles['action-card__error']}>{errors.file.message}</p>}
+          {successMessage && <p className={styles['action-card__success']}>{successMessage}</p>}
+          <DialogButton
+            type="submit"
+            disabled={isFileFetching || isFileListFetching || Boolean(successMessage)}
+          >
+            Загрузить
+          </DialogButton>
         </DialogForm>
       </Dialog>
     </Card>

@@ -5,7 +5,7 @@ import { BasePredictSchema } from '../baseSchema';
 const PredictSchema = BasePredictSchema.extend({});
 const PredictBatchSchema = z.object({
   results: z.array(PredictSchema),
-  excel_file_path: z.string()
+  report_available: z.boolean()
 });
 
 // Types

@@ -11,10 +11,10 @@
   opacity: 0.8;
 }
 
-/* .btn:disabled {
-  background-color: $color-grey-200;
+.btn:disabled {
+  background-color: var(--color-background-darker);
   cursor: default;
-} */
+}
 
 .btn--secondary-light {
   background-color: var(--color-background-lighter);

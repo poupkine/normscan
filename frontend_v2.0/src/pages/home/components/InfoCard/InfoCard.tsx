@@ -9,7 +9,7 @@ export const InfoCard: FC = () => {
       <h2 className={styles['info-card__title']}>Как это работает?</h2>
       <div className={styles['info-card__wrapper']}>
         <div className={styles['info-card__item']}>
-          <svg className={styles['info-card__item-icon']} width="100" height="100" aria-hidden="true">
+          <svg className={styles['info-card__item-icon']} width="80" height="80" aria-hidden="true">
             <use xlinkHref={`${spriteUrl}#icon-upload`}></use>
           </svg>
           <span className={styles['info-card__item-title']}>
@@ -17,7 +17,7 @@ export const InfoCard: FC = () => {
           </span>
         </div>
         <div className={styles['info-card__item']}>
-          <svg className={styles['info-card__item-icon']} width="100" height="100" aria-hidden="true">
+          <svg className={styles['info-card__item-icon']} width="80" height="80" aria-hidden="true">
             <use xlinkHref={`${spriteUrl}#icon-gear`}></use>
           </svg>
           <span className={styles['info-card__item-title']}>
@@ -25,7 +25,7 @@ export const InfoCard: FC = () => {
           </span>
         </div>
         <div className={styles['info-card__item']}>
-          <svg className={styles['info-card__item-icon']} width="100" height="100" aria-hidden="true">
+          <svg className={styles['info-card__item-icon']} width="80" height="80" aria-hidden="true">
             <use xlinkHref={`${spriteUrl}#icon-clipboard`}></use>
           </svg>
           <span className={styles['info-card__item-title']}>
