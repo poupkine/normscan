@@ -1,0 +1,6 @@
+@import './global/normalize.css';
+@import './global/reset.css';
+@import './global/variables.css';
+@import './global/btn.css';
+@import './global/fonts.css';
+@import './global/visually-hidden.css';
