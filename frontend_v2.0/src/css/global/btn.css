@@ -1,0 +1,38 @@
+.btn {
+  min-height: 32px;
+  border-radius: 8px;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn:active {
+  opacity: 0.8;
+}
+
+.btn:disabled {
+  background-color: var(--color-background-darker);
+  cursor: default;
+}
+
+.btn--secondary-light {
+  background-color: var(--color-background-lighter);
+  color: var(--color-secondary);
+  border: 1px solid var(--color-secondary);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.btn--error:not(:disabled) {
+  background-color: var(--color-error);
+  color: var(--color-background-lighter);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+/* &:focus-visible {
+  box-shadow: 0px 0px 5px 2px $color-mandy-100;
+} */

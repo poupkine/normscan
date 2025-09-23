@@ -1,0 +1,52 @@
+.action-card {
+  min-width: 540px;
+  min-height: 540px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 30px 60px 60px 60px;
+}
+
+.action-card__icon {
+  width: 242px;
+  height: 180px;
+  color: var(--color-secondary);
+  align-self: center;
+}
+
+.action-card__button {
+  padding: 20px 30px;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: var(--color-white);
+  background-color: var(--color-secondary);
+}
+
+.action-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.action-card__info-text {
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 21px;
+}
+
+.action-card__error {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  color: var(--color-error)
+}
+
+.action-card__success {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  color: var(--color-success)
+}

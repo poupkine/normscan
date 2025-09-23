@@ -1,0 +1,55 @@
+.error {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-index-error);
+  background-color: var(--color-black-025);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-dialog {
+  width: 300px;
+  margin: 30px;
+  padding: 20px;
+  background-color: var(--color-background);
+  border-radius: 16px;
+}
+
+.error-dialog__title {
+  margin: 0 0 20px 0;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.error-dialog__content {
+  margin: 0 0 20px 0;
+  max-height: 50vh;
+  overflow: hidden;
+}
+
+.error-dialog__content-text {
+  margin: 0;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.error-dialog__actions {
+  display: flex;
+  align-items: center;
+}
+
+.error-dialog__btn {
+  min-height: 30px;
+  margin: 0 auto;
+  padding: 5px 20px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+}
