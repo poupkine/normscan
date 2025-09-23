@@ -37729,3 +37729,13 @@ backend/app/dataloader/dicom_loader.py
 backend/app/dataloader/preprocessing.py
 frontend/src/components/ReportDownloader.jsx
 project_structure_analysis.txt
+backend_old/data/input_zips/norma_anon.zip
+backend_old/data/input_zips/norma_anon_small.zip
+backend_old/data/input_zips/pneumonia_anon.zip
+backend_old/data/input_zips/pneumotorax_anon.zip
+backend_old/data/test_dataset/normal/norma_anon.zip
+backend_old/data/test_dataset/pathology/pneumonia_anon.zip
+backend_old/data/test_dataset/pathology/pneumotorax_anon.zip
+backend/data/output/report.xlsx
+project_full_snapshot.txt
+backend/output/report.xlsx

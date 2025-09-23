@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // Zip file form schema
-const fileSizeLimit = 5 * 1024 * 1024; // 5MB
+const fileSizeLimit = 1024 * 1024 * 1024; // 1GB
 const maxFileSizeMessage = 'Максимальный размер файла 5MB';
 const documentMimeTypes = [
   'application/zip',
