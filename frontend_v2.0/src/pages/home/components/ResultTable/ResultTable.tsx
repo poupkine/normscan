@@ -1,6 +1,5 @@
 import { type FC } from 'react';
-import { useAppSelector } from '@store/hooks';
-import { selectResultList } from '@pages/home/slice';
+import type { ResultList } from '@pages/home/slice';
 import {
   Table,
   TableHead,
@@ -10,9 +9,11 @@ import {
   TableData
 } from '@ui/Table';
 
-export const ResultTable: FC = () => {
-  const resultList = useAppSelector(selectResultList);
+interface Props {
+  resultList: ResultList;
+}
 
+export const ResultTable: FC<Props> = ({ resultList }) => {
   return (
     <Table>
       <TableHead>

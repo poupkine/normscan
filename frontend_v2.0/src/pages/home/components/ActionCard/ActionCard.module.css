@@ -50,3 +50,46 @@
   text-align: center;
   color: var(--color-success)
 }
+
+@media (max-width: 1536px) {
+  .action-card {
+    min-width: 470px;
+    min-height: 470px;
+    gap: 20px;
+    padding: 30px 40px 40px 40px;
+  }
+
+  .action-card__button {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .action-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .action-card__info-text {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+  }
+}
+
+
+@media (max-width: 670px) {
+  .action-card {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .action-card__icon {
+    width: 220px;
+  }
+
+  .action-card__button {
+    padding: 18px 20px;
+  }
+}

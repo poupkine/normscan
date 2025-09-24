@@ -11,7 +11,7 @@ export const Header: FC = () => {
         <div className={styles['header__wrapper']}>
           <Link className={styles['header__logo-link']} to='/'>
             <svg className={styles['header__logo-image']} width="319" height="42" aria-hidden="true">
-              <use xlinkHref={`${spriteUrl}#icon-main-logo-flat`}></use>
+              <use xlinkHref={`${spriteUrl}#icon-logo`}></use>
             </svg>
           </Link>
         </div>
