@@ -12,16 +12,19 @@ export const Home: FC = () => {
   return (
     <div className={styles['home-page']}>
       <h1 className={styles['home-page__title']}>
-        NORMSCAN — ИИ-сервис для выявления КТ ОГК с «нормой»
+        Автоматический анализ КТ-исследований
       </h1>
       <div className={styles['home-page__content-grid']}>
         <InfoCard />
         <ActionCard />
       </div>
-      <h2 className={styles['home-page__subtitle']}>Результаты</h2>
-      <ResultTable />
-      {
-        resultList.length > 1 &&
+      {resultList.length > 0 &&
+        <>
+          <h2 className={styles['home-page__subtitle']}>Результаты</h2>
+          <ResultTable resultList={resultList} />
+        </>
+      }
+      {resultList.length > 1 &&
         <a
           className={styles['home-page__report-link']}
           href='https://normscan.ru/api/download_report'
@@ -29,8 +32,7 @@ export const Home: FC = () => {
           rel='noopener noreferrer'
         >
           Скачать отчет
-        </a>
-      }
+        </a>}
     </div>
   );
 };

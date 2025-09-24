@@ -10,6 +10,8 @@ const initialState: HomePageState = {
   resultList: []
 };
 
+type ResultList = HomePageState['resultList'];
+
 export const homePageSlice = createSlice({
   name: 'pages/homePage',
   initialState,
@@ -20,6 +22,8 @@ export const homePageSlice = createSlice({
     reset: () => initialState
   }
 });
+
+export type { ResultList };
 
 export const { setResultList, reset } = homePageSlice.actions;
 export const selectResultList = (state: RootState) => state.pages.homePage.resultList;
