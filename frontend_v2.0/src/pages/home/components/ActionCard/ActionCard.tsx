@@ -45,10 +45,12 @@ export const ActionCard: FC = () => {
     register,
     reset,
     handleSubmit,
+    watch,
     formState: { errors }
   } = useForm<FormSchema>({
     resolver: zodResolver(FormSchema)
   });
+  const file = watch('file');
 
   useEffect(() => {
     if (fileStatus === 'success' && fileData) {
@@ -128,7 +130,47 @@ export const ActionCard: FC = () => {
         <DialogForm
           onSubmit={onSubmit}
         >
-          <input type="file" multiple accept=".zip" {...register('file')} />
+          <label
+            className={styles['action-card__input-label']}
+          >
+            <input
+              className={styles['action-card__input-field']}
+              type="file"
+              multiple accept=".zip"
+              title="Перенесите или загрузите нужный файл"
+              {...register('file')}
+              disabled={file?.length > 0}
+            />
+            <svg
+              className={file?.length > 0
+                ? `${styles['action-card__input-icon']} ${styles['action-card__input-icon--invisible']}`
+                : styles['action-card__input-icon']
+              }
+              width="300"
+              height="224"
+              aria-hidden="true"
+            >
+              <use xlinkHref={`${spriteUrl}#icon-cloud-upload-big`}></use>
+            </svg>
+            <span className={file?.length > 0
+              ? `${styles['action-card__input-text']} ${styles['action-card__input-text--invisible']}`
+              : styles['action-card__input-text']
+            }>
+              Перенесите или загрузите нужный файл
+            </span>
+            {file?.length > 0 &&
+              <ul className={styles['action-card__input-file-list']}>
+                {[...file].map(file => (
+                  <li
+                    key={file.name}
+                    className={styles['action-card__input-file-list-item']}
+                  >
+                    {file.name}
+                  </li>
+                ))}
+              </ul>
+            }
+          </label>
           {errors.file && <p className={styles['action-card__error']}>{errors.file.message}</p>}
           {successMessage && <p className={styles['action-card__success']}>{successMessage}</p>}
           <DialogButton
