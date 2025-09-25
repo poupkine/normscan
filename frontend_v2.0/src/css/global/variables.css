@@ -15,6 +15,8 @@
   --color-white: #FFFFFF;
   --color-black-025: rgba(0, 0, 0, 0.25);
   --color-secondary-100: #C3D8E5;
+  --color-scrollbar: rgba(0, 114, 185, 0.4);
+  --color-scrollbar-lighter: rgba(0, 114, 185, 0.05);
 
   /* Fonts */
   --font-family: 'Montserrat', Arial, Helvetica, sans-serif;
