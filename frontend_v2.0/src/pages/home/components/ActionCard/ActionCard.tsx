@@ -115,7 +115,7 @@ export const ActionCard: FC = () => {
           Поддерживается формат DICOM в ZIP архиве
         </span>
         <span className={styles['action-card__info-text']}>
-          Максимальный размер файла 5МБ
+          Максимальный размер файла 1ГБ
         </span>
         <span className={styles['action-card__info-text']}>
           Исследование будет автоматизировано
