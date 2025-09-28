@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 import numpy as np
 import logging
-from ..model.study_pathology_detector import StudyPathologyDetector
+from ..models.study_pathology_detector import StudyPathologyDetector
 
 logger = logging.getLogger(__name__)
 

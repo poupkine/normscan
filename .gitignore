@@ -37740,3 +37740,12 @@ backend/data/output/report.xlsx
 project_full_snapshot.txt
 backend/output/report.xlsx
 norma_anon_small.zip
+backend/data/val/pathology/pneumotorax_anon.zip
+backend/data/val/normal/norma_anon.zip
+backend/data/val/pathology/pneumonia_anon.zip
+backend/utils/__pycache__/excel_reporter.cpython-313.pyc
+backend/data/train/normal/norma_anon.zip
+backend/app/services/__pycache__/dicom_loader.cpython-313.pyc
+backend/app/models/__pycache__/autoencoder_2d.cpython-313.pyc
+__pycache__/train_model.cpython-313.pyc
+analyzer.py
