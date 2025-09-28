@@ -15,15 +15,20 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="NORMSCAN API", version="1.0.0")
 
-# CORS для фронтенда (важно: должен быть до всех маршрутов!)
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",      # для локальной разработки
+        "http://127.0.0.1:3000",
+        "http://localhost:8000",        # если фронт через nginx на 80 порту
+        "https://normscan.ru",        # ваш продакшен-домен
+        # Добавьте другие нужные origins
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],              # или ["GET", "POST", "OPTIONS"]
+    allow_headers=["*"],              # или конкретные заголовки
 )
-
 # Глобальный сервис (lazy init)
 ml_service = None
 MODEL_PATH = "app/static/model_weights/autoencoder_2d.pth"
@@ -54,6 +59,7 @@ async def predict(file: UploadFile = File(...)):
     try:
         contents = await file.read()
         result = get_ml_service().predict_from_bytes(contents, file.filename)
+
         return JSONResponse(content=result)
     except Exception as e:
         logger.error(f"Ошибка обработки файла {file.filename}: {str(e)}")
@@ -90,9 +96,17 @@ async def batch_predict(files: list[UploadFile] = File(...)):
     # Генерируем отчёт
     LAST_REPORT_PATH = "output/report.xlsx"
     Path(LAST_REPORT_PATH).parent.mkdir(exist_ok=True)
-    generate_excel_report(results, LAST_REPORT_PATH)
-
-    return JSONResponse(content={"results": results, "report_available": True})
+    full_report_path = Path(LAST_REPORT_PATH).resolve()  # ← полный абсолютный путь
+    try:
+        generate_excel_report(results, LAST_REPORT_PATH)
+        logger.info(f"✅ Отчёт УСПЕШНО сохранён по пути: {full_report_path}")
+        report_ok = True
+    except Exception as e:
+        logger.error("❌ Не удалось создать Excel-отчёт")
+        # raise HTTPException(status_code=500, detail="Report generation failed")
+        logger.error(f"❌ ОШИБКА при сохранении отчёта в {full_report_path}: {e}")
+        report_ok = False
+    return JSONResponse(content={"results": results, "report_available": report_ok})
 
 
 @app.get("/api/download_report")

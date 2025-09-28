@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import logging
 from ..models.study_pathology_detector import StudyPathologyDetector
+from app.models.autoencoder_2d import Autoencoder2D
 
 logger = logging.getLogger(__name__)
 

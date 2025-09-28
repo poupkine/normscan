@@ -27,7 +27,7 @@ export const Home: FC = () => {
       {resultList.length > 1 &&
         <a
           className={styles['home-page__report-link']}
-          href='https://normscan.ru/api/download_report'
+          href='/api/download_report'
           target='_blank'
           rel='noopener noreferrer'
         >
