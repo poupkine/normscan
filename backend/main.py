@@ -21,6 +21,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",      # для локальной разработки
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
         "http://localhost:8000",        # если фронт через nginx на 80 порту
         "https://normscan.ru",        # ваш продакшен-домен
         # Добавьте другие нужные origins
