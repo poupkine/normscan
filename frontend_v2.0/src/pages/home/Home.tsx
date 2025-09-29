@@ -24,7 +24,7 @@ export const Home: FC = () => {
           <ResultTable resultList={resultList} />
         </>
       }
-      {resultList.length > 1 &&
+      {resultList.length > 0 &&
         <a
           className={styles['home-page__report-link']}
           href='/api/download_report'
@@ -32,7 +32,8 @@ export const Home: FC = () => {
           rel='noopener noreferrer'
         >
           Скачать отчет
-        </a>}
+        </a>
+      }
     </div>
   );
 };
