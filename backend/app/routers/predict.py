@@ -31,6 +31,11 @@ async def predict_single(file: UploadFile = File(...)):
         # Удаляем временный файл
         os.unlink(tmp_path)
 
+        # Генерируем Excel
+        excel_path = "data/output/report.xlsx"
+        generate_excel_report([result], excel_path)
+        return
+
         return result
 
     except Exception as e:

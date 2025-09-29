@@ -1,4 +1,5 @@
 # backend/main.py
+from typing import List, Dict
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -21,6 +22,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",      # для локальной разработки
         "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
         "http://localhost:8000",        # если фронт через nginx на 80 порту
         "https://normscan.ru",        # ваш продакшен-домен
         # Добавьте другие нужные origins
@@ -32,6 +35,23 @@ app.add_middleware(
 # Глобальный сервис (lazy init)
 ml_service = None
 MODEL_PATH = "app/static/model_weights/autoencoder_2d.pth"
+REPORT_PATH = "output/report.xlsx"
+
+
+def handle_generate_excel_report(results: List[Dict], output_path: str):
+    # Генерируем отчёт
+    Path(output_path).parent.mkdir(exist_ok=True)
+    full_report_path = Path(output_path).resolve()  # ← полный абсолютный путь
+    try:
+        generate_excel_report(results, output_path)
+        logger.info(f"✅ Отчёт УСПЕШНО сохранён по пути: {full_report_path}")
+        report_ok = True
+    except Exception as e:
+        logger.error("❌ Не удалось создать Excel-отчёт")
+        # raise HTTPException(status_code=500, detail="Report generation failed")
+        logger.error(f"❌ ОШИБКА при сохранении отчёта в {full_report_path}: {e}")
+        report_ok = False
+    return report_ok
 
 
 def get_ml_service():
@@ -59,6 +79,8 @@ async def predict(file: UploadFile = File(...)):
     try:
         contents = await file.read()
         result = get_ml_service().predict_from_bytes(contents, file.filename)
+
+        handle_generate_excel_report([result], REPORT_PATH)
 
         return JSONResponse(content=result)
     except Exception as e:
@@ -93,30 +115,17 @@ async def batch_predict(files: list[UploadFile] = File(...)):
                 "path_to_study": file.filename
             })
 
-    # Генерируем отчёт
-    LAST_REPORT_PATH = "output/report.xlsx"
-    Path(LAST_REPORT_PATH).parent.mkdir(exist_ok=True)
-    full_report_path = Path(LAST_REPORT_PATH).resolve()  # ← полный абсолютный путь
-    try:
-        generate_excel_report(results, LAST_REPORT_PATH)
-        logger.info(f"✅ Отчёт УСПЕШНО сохранён по пути: {full_report_path}")
-        report_ok = True
-    except Exception as e:
-        logger.error("❌ Не удалось создать Excel-отчёт")
-        # raise HTTPException(status_code=500, detail="Report generation failed")
-        logger.error(f"❌ ОШИБКА при сохранении отчёта в {full_report_path}: {e}")
-        report_ok = False
+    report_ok = handle_generate_excel_report(results, REPORT_PATH)
     return JSONResponse(content={"results": results, "report_available": report_ok})
 
 
 @app.get("/api/download_report")
 async def download_report():
     """Скачивание последнего сгенерированного отчёта"""
-    LAST_REPORT_PATH = "output/report.xlsx"
-    if not os.path.exists(LAST_REPORT_PATH):
+    if not os.path.exists(REPORT_PATH):
         raise HTTPException(status_code=404, detail="Report not found. Process files first.")
     return FileResponse(
-        path=LAST_REPORT_PATH,
+        path=REPORT_PATH,
         filename="normscan_report.xlsx",
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )

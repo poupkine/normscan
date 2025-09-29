@@ -1,11 +1,24 @@
 services:
+  backend:
+    build: ../../backend
+    container_name: backend_hack_2025
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../backend:/app
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    restart: unless-stopped
+
   frontend:
     build:
       context: ../../frontend_v2.0
       target: dev
     image: frontend_dev_v2.0:dev
-    container_name: frontend_dev_v2.0
+    container_name: frontend_hack_2025
     volumes:
       - ../../frontend_v2.0:/app
     ports:
-      - 5173:5173
+      - "5173:5173"
+    depends_on:
+      - backend
