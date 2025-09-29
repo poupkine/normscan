@@ -34,6 +34,7 @@ async def predict_single(file: UploadFile = File(...)):
         # Генерируем Excel
         excel_path = "data/output/report.xlsx"
         generate_excel_report([result], excel_path)
+        return
 
         return result
 
